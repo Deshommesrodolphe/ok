@@ -1,0 +1,48 @@
+---
+title: "Exercice de Regression lineaire"
+author: "Deshommes Rodolphe"
+date: "2023-06-26"
+output: html_document
+---
+
+library(ggplot2)
+# Importation des donnees
+df<-read.csv("CreditBancaire.csv")
+df
+
+str(df)
+
+# regression lineaire
+fit<-lm(Jours~Credit+Type, data=df)
+fit
+# Afficher les resultats detailles de la regression
+summary(fit)
+
+# Tableau des coeeficients
+## Afficher uniquement le tableau des coeefficients
+coefficients_table<-coef(summary(fit))
+coefficients_table
+
+# Coefficients et statistiques de Student
+## Afficher uniquement les colonnes des coefficients estimes et les statistiques de Student
+coefficients_only<-coefficients_table[,c("Estimate","t value")]
+coefficients_only
+
+# Graphique de la regression
+## Creer un graphique en nuage de points avec la droite de regression
+ggplot(df,aes(x=Credit,y=Jours))+geom_point()+geom_smooth(method="fit",se=FALSE)
+
+# Fonction de regression lineaire
+## Creer une fonction pour regresser y sur x
+regression_function<-function(df,x,y){
+fit<-lm(data[[y]]~df[[x]],data=data)
+coefficients<-coef(summary(fit))
+coefficients<-coefficients[,c("Estimate","t value")]
+return(coefficients)
+}
+regression_function
+
+# Utiliser la fonction pour regresser JoursRetards sur credit
+regression_result<-regression_function(data, "credit","Jours")
+regression_result
+
